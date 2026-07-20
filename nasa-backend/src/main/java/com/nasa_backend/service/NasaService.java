@@ -22,23 +22,22 @@ public class NasaService {
 
 
     private final WebClient webClient;
+
     public NasaService(WebClient webClient) {
         this.webClient = webClient;
     }
 
 
     public ImageResponse getEpicImages() {
-        String url = apiUrl + "?api_key=" + apiKey;
+//        String url = apiUrl + "?api_key=" + apiKey;
 
         try{
-
             EpicResponse[] responses = webClient
                     .get()
                     .uri(apiUrl + "?api_key=" + apiKey)
                     .retrieve()
                     .bodyToMono(EpicResponse[].class)
                     .block();
-
 
 
             if(responses == null || responses.length == 0) {

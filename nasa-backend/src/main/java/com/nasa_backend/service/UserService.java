@@ -1,16 +1,17 @@
 package com.nasa_backend.service;
 
 
-import com.nasa_backend.dto.AuthResponse;
-import com.nasa_backend.dto.LoginRequest;
-import com.nasa_backend.dto.RegisterRequest;
-import com.nasa_backend.dto.RegisterResponse;
+import com.nasa_backend.dto.*;
 import com.nasa_backend.entity.User;
 import com.nasa_backend.exception.ApiException;
 import com.nasa_backend.repository.UserRepository;
 import com.nasa_backend.util.JwtUtil;
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class UserService {
@@ -59,6 +60,23 @@ public class UserService {
 
         String token = jwtUtil.generateToken(user.getEmail());
         return new AuthResponse(token);
+    }
+
+    public UserProfileResponse getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.print("csutomauth:"+ authentication);
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException("User not found"));
+
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .dob(user.getDob())
+                .build();
     }
 }
 

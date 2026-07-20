@@ -1,17 +1,12 @@
 package com.nasa_backend.controller;
 
-import com.nasa_backend.dto.AuthResponse;
-import com.nasa_backend.dto.LoginRequest;
-import com.nasa_backend.dto.RegisterRequest;
-import com.nasa_backend.dto.RegisterResponse;
+import com.nasa_backend.dto.*;
 import com.nasa_backend.service.UserService;
 import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,5 +26,10 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return userService.login(request);
+    }
+
+    @GetMapping("/profile")
+    public UserProfileResponse getCurrentUser() {
+        return userService.getCurrentUser();
     }
 }
